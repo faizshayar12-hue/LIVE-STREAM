@@ -1,9 +1,6 @@
-name: Video + Audio Stream (Auto-Schedule & Copyright Protected)
+name: Video + Audio Stream (Loop & Auto-Restart)
 
 on:
-  schedule:
-    # 8:00 AM IST = 2:30 AM UTC
-    - cron: '30 2 * * *'
   workflow_dispatch:
   repository_dispatch:
     types: [restart_stream]
@@ -27,9 +24,10 @@ jobs:
           STREAM_URL: "rtmp://a.rtmp.youtube.com/live2/k4bv-wakv-50ad-uas6-8rtr"
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          echo "Streaming starting at scheduled time with Copyright Protection..."
+          echo "Streaming starting with Copyright Protection (Pitch & Speed Filter)..."
           
-          # FFmpeg with Audio Pitch (1.02) & Speed (1.02) to avoid copyright
+          # FFmpeg command with Audio Filters for copyright protection
+          # atempo=1.02 (2% fast) and asetrate changes pitch
           ffmpeg -re \
             -stream_loop -1 -i video.mp4 \
             -stream_loop -1 -i audio.mp3 \
